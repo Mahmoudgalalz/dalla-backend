@@ -4,6 +4,7 @@ import * as cookieParser from 'cookie-parser';
 // import { createRootUser, creatRootTokenPrice } from './common/init.data';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { Logger as pinoLogger } from 'nestjs-pino';
+import { AllExceptionFilter } from './shared/filters/all-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -26,7 +27,7 @@ async function bootstrap() {
   app.useLogger(app.get(pinoLogger));
   app.use(cookieParser());
   app.enableCors(corsOption);
-  // app.useGlobalFilters(new ErrorResponse());
+  app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
