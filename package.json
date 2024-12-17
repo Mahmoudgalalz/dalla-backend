@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "migrate:postgres": "prisma migrate dev --schema=prisma/postgres.schema",
+    "migrate:mongodb": "prisma migrate dev --schema=prisma/mongo.schema",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

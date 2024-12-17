@@ -1,10 +1,11 @@
 generator client {
   provider = "prisma-client-js"
+  output = "../node_modules/prisma/client/postgres"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_DATABASE_URL")
 }
 
 
@@ -12,6 +13,18 @@ model User {
   id          String      @id
   name        String
   email       String
+  password    String
+  gender      Gender?
+
+  @@unique([email, id])
+  @@index([email])
+}
+
+model Company {
+  id          String      @id
+  name        String
+  email       String
+  domain      String
   password    String
   gender      Gender?
 
