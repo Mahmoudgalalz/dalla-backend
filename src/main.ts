@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-// import { createRootUser, creatRootTokenPrice } from './common/init.data';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { Logger as pinoLogger } from 'nestjs-pino';
 import { AllExceptionFilter } from './shared/filters/all-exception.filter';
@@ -21,9 +20,6 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
     // credentials: true,
   };
-
-  // await createRootUser('root', process.env.ADMIN, process.env.PASSWORD);
-  // await creatRootTokenPrice(Number(process.env.TOKEN_PRICE));
 
   app.useLogger(app.get(pinoLogger));
   app.use(cookieParser());

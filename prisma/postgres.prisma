@@ -12,13 +12,19 @@ datasource db {
 model User {
   id          String      @id
   name        String
+  username    String
   email       String
   password    String
-  gender      Gender?
+  UserProfile UserProfile?
+  onboarded   Boolean @default(false)
+  suspended   Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@unique([email, id])
+  @@unique([email, id, username])
   @@index([email])
 }
+
 
 model Company {
   id          String      @id
@@ -26,12 +32,84 @@ model Company {
   email       String
   domain      String
   password    String
-  gender      Gender?
+  industry    String
+  size        String
+  onboarded   Boolean @default(false)
+  suspended   Boolean @default(false)
+  verified    Boolean @default(true)
 
-  @@unique([email, id])
-  @@index([email])
+  CompanyProfile CompanyProfile?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([id, email, domain])
+  @@index([email, domain])
 }
 
+model CompanyProfile {
+  id          String      @id
+  companyId   String
+  location    String
+  areas       String[]
+  goals       String[]
+  targetIndustries String[]
+  website     String
+  headline    String
+  bio         String
+  logo        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Company Company @relation(fields: [companyId], references: [id])
+  @@unique([companyId])
+}
+
+model UserProfile {
+  id          String      @id
+  userId      String
+  headline    String
+  gender      Gender?
+  bio         String?
+  avatar      String
+  resume      String?
+  experience  UserExperience[]
+  education   UserEducation[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+  @@unique([userId])
+}
+
+model UserExperience {
+  id          String      @id
+  profileId   String
+  title       String
+  company     String
+  location    String
+  startDate   DateTime
+  endDate     DateTime
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  UserProfile UserProfile @relation(fields: [profileId], references: [id])
+}
+
+model UserEducation {
+  id          String      @id
+  profileId   String
+  school      String
+  degree      String
+  field       String
+  startDate   DateTime
+  endDate     DateTime
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  UserProfile UserProfile @relation(fields: [profileId], references: [id])
+}
 
 enum Gender {
   Male
