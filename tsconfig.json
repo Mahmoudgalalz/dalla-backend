@@ -1,6 +1,9 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "NodeNext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

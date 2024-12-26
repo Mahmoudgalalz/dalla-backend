@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { Logger as pinoLogger } from 'nestjs-pino';
 import { AllExceptionFilter } from './shared/filters/all-exception.filter';
@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
   const origins = process.env.ORIGINS
-    ? process.env.origins.replace(' ', '').split(',')
+    ? process.env.ORIGINS.replace(' ', '').split(',')
     : [];
   const port = process.env.PORT ?? 3000;
   const corsOption = {

@@ -12,14 +12,8 @@ import('nanoid')
   });
 
 const prefixes = {
-  auth: 'auth',
-  wallet: 'wal',
-  ticket: 'tic',
-  ticketPurchase: 'tic_pay',
-  event: 'ev',
-  ref: 'ref',
-  test: 'test',
-  transaction: 'tr',
+  company: 'cp',
+  proffesional: 'pf',
 } as const;
 
 export function newId(

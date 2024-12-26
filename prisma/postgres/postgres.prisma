@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../node_modules/prisma/client/postgres"
+  output = "../../node_modules/prisma/client/postgres"
 }
 
 datasource db {
@@ -17,6 +17,7 @@ model User {
   password    String
   UserProfile UserProfile?
   onboarded   Boolean @default(false)
+  verified    Boolean @default(false)
   suspended   Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -36,7 +37,7 @@ model Company {
   size        String
   onboarded   Boolean @default(false)
   suspended   Boolean @default(false)
-  verified    Boolean @default(true)
+  verified    Boolean @default(false)
 
   CompanyProfile CompanyProfile?
   createdAt   DateTime @default(now())
@@ -72,6 +73,7 @@ model UserProfile {
   bio         String?
   avatar      String
   resume      String?
+  precentage  Float? @default(20)
   experience  UserExperience[]
   education   UserEducation[]
   createdAt   DateTime @default(now())
