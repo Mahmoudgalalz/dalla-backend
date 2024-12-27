@@ -9,17 +9,13 @@ import {
 } from '@nestjs/common';
 import { PlatformAuthService } from './auth.service';
 import { Response } from 'express';
-import { OTPService } from '../miscs/otp';
 import { Public } from '@/shared/decorators/isPublic.decorator';
 import { LoginDto } from './dto/login.dto';
 import { CompanyRegisterDto } from './dto/register-company.dto';
 import { VerifyDto } from './dto/verify.dto';
 @Controller('auth')
 export class PlatformAuthController {
-  constructor(
-    private readonly authService: PlatformAuthService,
-    private readonly otpService: OTPService,
-  ) {}
+  constructor(private readonly authService: PlatformAuthService) {}
 
   @Public()
   @Post('company/login')
@@ -40,7 +36,7 @@ export class PlatformAuthController {
               : 'localhost',
         });
         res.status(HttpStatus.ACCEPTED).send({
-          status: 'success',
+          success: true,
           message: 'Tokens',
           data: {
             access_token: payload.access_token,
@@ -90,7 +86,11 @@ export class PlatformAuthController {
         verifyOtp.email,
         verifyOtp.otp,
       );
-      res.status(HttpStatus.ACCEPTED).send(result);
+      return {
+        succuess: true,
+        message: "Company's email verified",
+        data: result,
+      };
     } catch (err) {
       throw new UnauthorizedException(err?.message, {
         cause: err,

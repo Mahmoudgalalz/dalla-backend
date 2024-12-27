@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JWTService } from '../miscs/jwt';
 import { UserTypes } from '@/shared/enums/user-types.enum';
 import { BcryptService } from '../miscs/bcrypt';
@@ -49,6 +49,7 @@ export class PlatformAuthService {
       registerDto.password,
     );
     const otp = await this.otpService.generateOtp(registerDto.email);
+    Logger.log(otp);
     await this.emailService.sendOtpEmail({
       to: registerDto.email,
       subject: 'Verify your email',

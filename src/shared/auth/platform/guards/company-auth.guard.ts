@@ -45,13 +45,13 @@ export class CompanyAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
-      const user = await this.prisma.company.findUnique({
+      const company = await this.prisma.company.findUnique({
         where: {
           id: payload.userId,
         },
       });
-      if (user) {
-        request['user'] = user;
+      if (company) {
+        request['company'] = company;
         return true;
       }
     } catch (error) {

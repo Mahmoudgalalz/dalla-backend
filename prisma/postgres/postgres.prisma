@@ -50,14 +50,14 @@ model Company {
 model CompanyProfile {
   id          String      @id
   companyId   String
-  location    String
+  location    String?
   areas       String[]
   goals       String[]
   targetIndustries String[]
-  website     String
-  headline    String
-  bio         String
-  logo        String
+  website     String?
+  headline    String?
+  bio         String?
+  logo        String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

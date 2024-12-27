@@ -12,8 +12,10 @@ import('nanoid')
   });
 
 const prefixes = {
-  company: 'cp',
-  proffesional: 'pf',
+  company: 'ck',
+  companyProfile: 'cp',
+  professionalProfile: 'pp',
+  profesional: 'pk',
 } as const;
 
 export function newId(
