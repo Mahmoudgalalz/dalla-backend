@@ -15,7 +15,7 @@ import { Company } from '@/prisma/postgres';
 
 @Controller()
 @UseGuards(CompanyAuthGuard)
-export class PlatformAuthController {
+export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post('onboarding')
