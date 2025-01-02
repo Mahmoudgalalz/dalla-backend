@@ -9,8 +9,10 @@ import { Constants } from '@/shared/constants';
       provide: 'REDIS_CLIENT',
       useFactory: async () => {
         const redis = new Redis({
-          host: 'localhost',
-          port: 6379,
+          port: parseInt(process.env.REDIS_PORT) || 6379,
+          host: process.env.REDIS_HOST || 'localhost',
+          password: process.env.REDIS_PASSWORD || undefined,
+          username: process.env.REDIS_USERNAME || undefined,
         });
         return redis;
       },
