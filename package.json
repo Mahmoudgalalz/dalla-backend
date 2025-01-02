@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "migrate:postgres": "prisma migrate dev --schema=./prisma/postgres/postgres.prisma",
-    "migrate:mongodb": "prisma migrate dev --schema=./prisma/monog/mongo.prisma",
+    "migrate:mongodb": "prisma migrate dev --schema=./prisma/monogo/mongo.prisma",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
