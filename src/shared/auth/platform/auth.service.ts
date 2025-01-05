@@ -36,6 +36,7 @@ export class PlatformAuthService {
   }
 
   async companyRegister(registerDto: CompanyRegisterDto) {
+    const { password, ...rest } = registerDto;
     const existingUser = await this.prisma.company.findFirst({
       where: {
         email: registerDto.email,
@@ -45,9 +46,7 @@ export class PlatformAuthService {
     if (existingUser) {
       throw new UnauthorizedException('Company already exists');
     }
-    const hashedPassword = await this.bycrptService.hashPassword(
-      registerDto.password,
-    );
+    const hashedPassword = await this.bycrptService.hashPassword(password);
     const otp = await this.otpService.generateOtp(registerDto.email);
     Logger.log(otp);
     await this.emailService.sendOtpEmail({
@@ -61,7 +60,7 @@ export class PlatformAuthService {
       data: {
         id: newId('company', 16),
         password: hashedPassword,
-        ...registerDto,
+        ...rest,
       },
     });
     return {

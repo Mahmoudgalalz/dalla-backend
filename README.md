@@ -31,10 +31,12 @@
 $ pnpm install
 ```
 
-## Running the app
+## Running the app & how to setup locally
 
 ```bash
 # development
+$ pnpm install
+$ pnpm migrate:postgres
 $ pnpm run start
 
 # watch mode
