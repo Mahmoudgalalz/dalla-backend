@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PostgresPrismaService } from '@/config/prisma/postgres.services';
 import { Prisma } from '@/prisma/postgres';
 import { newId } from '@/shared/utils/unique-id';
+import { UpdateCompanyAndProfileDto } from '@/companies/dto/UpdateCompanyAndProfile.dto';
 
 @Injectable()
 export class CompanyService {
@@ -61,5 +62,48 @@ export class CompanyService {
         },
       },
     });
+  }
+
+  async updateCompanyProfile(
+    companyId: string,
+    updateData: UpdateCompanyAndProfileDto,
+  ) {
+    const {
+      location,
+      areas,
+      goals,
+      targetIndustries,
+      website,
+      headline,
+      bio,
+      logo,
+      ...companyData
+    } = updateData;
+
+    // Update Company
+    const updatedCompany = await this.prisma.company.update({
+      where: { id: companyId },
+      data: companyData,
+    });
+
+    // Update CompanyProfile
+    const updatedCompanyProfile = await this.prisma.companyProfile.update({
+      where: { companyId },
+      data: {
+        location,
+        areas,
+        goals,
+        targetIndustries,
+        website,
+        headline,
+        bio,
+        logo,
+      },
+    });
+
+    return {
+      company: updatedCompany,
+      profile: updatedCompanyProfile,
+    };
   }
 }

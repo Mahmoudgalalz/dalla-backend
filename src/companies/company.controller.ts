@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -13,6 +14,7 @@ import { CompanyAuthGuard } from '@/shared/auth/platform/guards/company-auth.gua
 import { CurrentCompany } from '@/shared/decorators/current-auth.decorator';
 import { OnboardingValidation } from './validation/onboarding.validation';
 import { Company } from '@/prisma/postgres';
+import { UpdateCompanyAndProfileDto } from '@/companies/dto/UpdateCompanyAndProfile.dto';
 
 @Controller()
 @UseGuards(CompanyAuthGuard)
@@ -46,5 +48,14 @@ export class CompanyController {
   @Get('profile')
   async getProfile(@CurrentCompany() company: Company) {
     return await this.companyService.getCompanyProfile(company.id);
+  }
+
+  @Patch('profile')
+  @HttpCode(HttpStatus.OK)
+  async updateCompanyProfile(
+    @CurrentCompany() company: Company,
+    @Body() updateData: UpdateCompanyAndProfileDto,
+  ) {
+    return this.companyService.updateCompanyProfile(company.id, updateData);
   }
 }
