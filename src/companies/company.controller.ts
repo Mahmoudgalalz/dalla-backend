@@ -1,10 +1,11 @@
 import {
-  Controller,
-  Post,
   Body,
-  UnauthorizedException,
-  HttpStatus,
+  Controller,
+  Get,
   HttpCode,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
@@ -40,5 +41,10 @@ export class CompanyController {
         description: err,
       });
     }
+  }
+
+  @Get('profile')
+  async getProfile(@CurrentCompany() company: Company) {
+    return await this.companyService.getCompanyProfile(company.id);
   }
 }
