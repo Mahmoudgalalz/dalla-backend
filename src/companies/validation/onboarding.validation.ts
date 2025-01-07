@@ -10,7 +10,6 @@ export class OnboardingValidation {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @IsOptional()
   location: string;
 
   @IsArray()
