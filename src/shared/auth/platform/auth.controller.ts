@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  UnauthorizedException,
   Res,
   HttpStatus,
   HttpCode,
@@ -13,6 +12,8 @@ import { Public } from '@/shared/decorators/isPublic.decorator';
 import { LoginDto } from './dto/login.dto';
 import { CompanyRegisterDto } from './dto/register-company.dto';
 import { VerifyDto } from './dto/verify.dto';
+import { ResponseUtil } from '@/shared/utils/response.util';
+import { CustomHttpException } from '@/shared/exceptions/custom-http-exception';
 @Controller('auth')
 export class PlatformAuthController {
   constructor(private readonly authService: PlatformAuthService) {}
@@ -35,67 +36,72 @@ export class PlatformAuthController {
               ? process.env.domain
               : 'localhost',
         });
-        res.status(HttpStatus.ACCEPTED).send({
-          success: true,
-          message: 'Tokens',
-          data: {
-            access_token: payload.access_token,
-          },
-        });
-        return;
+        return ResponseUtil.success(
+          { access_token: payload.access_token },
+          'Tokens',
+        );
       }
-      res.status(HttpStatus.NOT_FOUND).send({
-        status: 'error',
-        message: "Couldn't find the user",
-        data: {},
-      });
-      return;
+      return ResponseUtil.error(
+        "Couldn't find the user",
+        'something went wrong',
+        HttpStatus.NOT_FOUND,
+      );
     } catch (err) {
-      throw new UnauthorizedException(err?.message, {
-        cause: err,
-        description: err,
-      });
+      throw new CustomHttpException(
+        err?.message,
+        {
+          cause: err,
+          description: err,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 
   @Post('company/register')
   @Public()
-  async companyRegister(
-    @Res() res: Response,
-    @Body() registerDto: CompanyRegisterDto,
-  ) {
+  async companyRegister(@Body() registerDto: CompanyRegisterDto) {
     try {
       const result = await this.authService.companyRegister(registerDto);
-      res.status(HttpStatus.ACCEPTED).send(result);
+      return ResponseUtil.success(
+        result,
+        'Company registered successfully',
+        HttpStatus.ACCEPTED,
+      );
     } catch (err) {
-      throw new UnauthorizedException(err?.message, {
-        cause: err,
-        description: err,
-      });
+      throw new CustomHttpException(
+        err?.message,
+        {
+          cause: err,
+          description: err,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 
   @Post('company/verify')
   @Public()
-  async companyRegisterVerify(
-    @Res() res: Response,
-    @Body() verifyOtp: VerifyDto,
-  ) {
+  async companyRegisterVerify(@Body() verifyOtp: VerifyDto) {
     try {
       const result = await this.authService.companyVerify(
         verifyOtp.email,
         verifyOtp.otp,
       );
-      return {
-        succuess: true,
-        message: "Company's email verified",
-        data: result,
-      };
+      return ResponseUtil.success(
+        result,
+        'Company verified successfully',
+        HttpStatus.OK,
+      );
     } catch (err) {
-      throw new UnauthorizedException(err?.message, {
-        cause: err,
-        description: err,
-      });
+      throw new CustomHttpException(
+        err?.message,
+        {
+          cause: err,
+          description: err,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 }
