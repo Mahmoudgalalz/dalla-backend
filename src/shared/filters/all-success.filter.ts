@@ -20,7 +20,8 @@ export class AllSuccessResponseFilter implements NestInterceptor {
       map((data: DataResponse) => {
         const response = context.switchToHttp().getResponse<Response>();
 
-        return response.status(data.statusCode).json(data);
+        response.status(data.statusCode).json(data);
+        return;
       }),
     );
   }
