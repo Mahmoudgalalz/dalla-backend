@@ -15,6 +15,8 @@ import { CurrentCompany } from '@/shared/decorators/current-auth.decorator';
 import { OnboardingValidation } from './validation/onboarding.validation';
 import { Company } from '@/prisma/postgres';
 import { UpdateCompanyAndProfileDto } from '@/companies/dto/UpdateCompanyAndProfile.dto';
+import { ResponseUtil } from '@/shared/utils/response.util';
+import { CustomHttpException } from '@/shared/exceptions/custom-http-exception';
 
 @Controller()
 @UseGuards(CompanyAuthGuard)
@@ -22,7 +24,6 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post('onboarding')
-  @HttpCode(HttpStatus.OK)
   async companyLogin(
     @CurrentCompany() company: Company,
     @Body() onboardingValidation: OnboardingValidation,
@@ -32,16 +33,17 @@ export class CompanyController {
         company.id,
         onboardingValidation,
       );
-      return {
-        success: true,
-        message: 'Company onboarding',
-        data: onboarding,
-      };
+      return ResponseUtil.success(
+        onboarding,
+        'Company onboarding successful',
+        HttpStatus.CREATED,
+      );
     } catch (err) {
-      throw new UnauthorizedException(err?.message, {
-        cause: err,
-        description: err,
-      });
+      throw new CustomHttpException(
+        err.message,
+        err.errors,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 

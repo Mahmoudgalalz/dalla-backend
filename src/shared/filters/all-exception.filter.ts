@@ -112,6 +112,7 @@ export class AllExceptionFilter<
         statusCode,
         success: false,
         message: message || 'Error occurred',
+        data: null,
         error,
         path: originalUrl,
         timestamp: new Date().toISOString(),
