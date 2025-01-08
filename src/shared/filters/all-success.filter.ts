@@ -1,29 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// src/common/interceptors/all-success-response.filter.ts
-
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
 import { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SuccessResponseHelper } from './success-reponse.helper';
+import { Response } from 'express';
 
+interface DataResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+  data: null;
+  error: any;
+  path: string;
+  timestamp: string;
+}
 @Injectable()
-export class AllSuccessResponseFilter<T> implements NestInterceptor {
+export class AllSuccessResponseFilter implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => {
-        const request = context.switchToHttp().getRequest();
+      map((data: DataResponse) => {
         const response = context.switchToHttp().getResponse<Response>();
 
-        const successResponse = SuccessResponseHelper.formatSuccess(
-          'Request was successful', // Default message
-          data,
-          response.statusCode, // Use the status code from the response
-          request.originalUrl, // Path of the request
-        );
-
-        return successResponse;
+        return response.status(data.statusCode).json(data);
       }),
     );
   }
