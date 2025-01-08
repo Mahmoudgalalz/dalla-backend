@@ -63,10 +63,7 @@ export class PlatformAuthService {
         ...rest,
       },
     });
-    return {
-      success: true,
-      message: 'Company registered successfully, otp sent to the email',
-    };
+    return null;
   }
 
   async companyVerify(email: string, otp: string) {
