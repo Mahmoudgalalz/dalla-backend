@@ -14,6 +14,7 @@ import { CompanyRegisterDto } from './dto/register-company.dto';
 import { VerifyDto } from './dto/verify.dto';
 import { ResponseUtil } from '@/shared/utils/response.util';
 import { CustomHttpException } from '@/shared/exceptions/custom-http-exception';
+import { ProfessionalRegisterDto } from '@/shared/auth/platform/dto/register-professional.dto';
 @Controller('auth')
 export class PlatformAuthController {
   constructor(private readonly authService: PlatformAuthService) {}
@@ -92,6 +93,68 @@ export class PlatformAuthController {
         result,
         'Company verified successfully',
         HttpStatus.OK,
+      );
+    } catch (err) {
+      throw new CustomHttpException(
+        err?.message,
+        {
+          cause: err,
+          description: err,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+
+  @Post('professional/register')
+  @Public()
+  async RegisterProfessional(@Body() registerDto: ProfessionalRegisterDto) {
+    try {
+      const result = await this.authService.registerProfessional(registerDto);
+      return ResponseUtil.success(
+        result,
+        'professional registered successfully',
+        HttpStatus.ACCEPTED,
+      );
+    } catch (err) {
+      throw new CustomHttpException(
+        err?.message,
+        {
+          cause: err,
+          description: err,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+  }
+
+  @Public()
+  @Post('professional/login')
+  @HttpCode(HttpStatus.OK)
+  async LoginProfessional(@Body() loginDto: LoginDto, @Res() res: Response) {
+    try {
+      const payload = await this.authService.validateProfessional(
+        loginDto.email,
+        loginDto.password,
+      );
+      if (payload.access_token) {
+        res.cookie('refreshToken', payload.refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development',
+          domain:
+            process.env.NODE_ENV !== 'development'
+              ? process.env.domain
+              : 'localhost',
+        });
+        return ResponseUtil.success(
+          { access_token: payload.access_token },
+          'Tokens',
+        );
+      }
+      return ResponseUtil.error(
+        "Couldn't find the user",
+        'something went wrong',
+        HttpStatus.NOT_FOUND,
       );
     } catch (err) {
       throw new CustomHttpException(

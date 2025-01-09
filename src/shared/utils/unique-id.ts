@@ -15,7 +15,7 @@ const prefixes = {
   company: 'ck',
   companyProfile: 'cp',
   professionalProfile: 'pp',
-  profesional: 'pk',
+  professional: 'pk',
 } as const;
 
 export function newId(
