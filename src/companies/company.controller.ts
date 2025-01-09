@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Patch,
   Post,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
@@ -49,7 +48,14 @@ export class CompanyController {
 
   @Get('profile')
   async getProfile(@CurrentCompany() company: Company) {
-    return await this.companyService.getCompanyProfile(company.id);
+    const companyProfile = await this.companyService.getCompanyProfile(
+      company.id,
+    );
+    return ResponseUtil.success(
+      companyProfile,
+      'Company profile retrieved successfully',
+      HttpStatus.OK,
+    );
   }
 
   @Patch('profile')
@@ -58,6 +64,14 @@ export class CompanyController {
     @CurrentCompany() company: Company,
     @Body() updateData: UpdateCompanyAndProfileDto,
   ) {
-    return this.companyService.updateCompanyProfile(company.id, updateData);
+    const updatedCompany = await this.companyService.updateCompanyProfile(
+      company.id,
+      updateData,
+    );
+    return ResponseUtil.success(
+      updatedCompany,
+      'Company profile updated successfully',
+      HttpStatus.OK,
+    );
   }
 }
